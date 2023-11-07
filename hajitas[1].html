@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        class simulationArea {
+            cnv = document.createElement('canvas');
+            start = () => {
+                this.cnv.height = 800;
+                this.cnv.width = 1200;
+                this.ctx = this.cnv.getContext("2d");
+                document.body.appendChild(this.cnv, document.body.childNodes[0]);
+                ball.initializeObjectDatas();
+                simulationRenderer();
+            }
+        }
+
+        class object {
+            constructor(x, y, r, vx, vy, color) {
+                this.x = x;
+                this.y = y;
+                this.r = r;
+                this.vx = vx;
+                this.vy = vy;
+                this.color = color;
+            }
+
+            initializeObjectDatas() {
+                simArea.ctx.fillStyle = this.color;
+                simArea.ctx.strokeStyle = "black";
+            }
+
+            drawSelf() {
+                simArea.ctx.clearRect(0, 0, simArea.cnv.width, simArea.cnv.height);
+                this.move();
+                simArea.ctx.beginPath();
+                simArea.ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
+                simArea.ctx.fill();
+                simArea.ctx.stroke();
+            }
+            move() {
+                this.x += 5;
+                this.y += 5;
+            }
+        }
+
+        function simulationRenderer() {
+            requestAnimationFrame(simulationRenderer);
+            ball.drawSelf();
+        }
+
+        const simArea = new simulationArea();
+        var ball = new object(100, 100, 25, 10, 10, "red");
+        window.onload = simArea.start();
+    </script>
+</body>
+</html>
