@@ -3,19 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Ball throwing simulation</title>
 </head>
 <body>
     <script>
         class simulationArea {
             cnv = document.createElement('canvas');
-            start = () => {
+            start() {
                 this.cnv.height = 800;
                 this.cnv.width = 1200;
+                this.cnv.style.border = '2px solid white';
                 this.ctx = this.cnv.getContext("2d");
                 document.body.appendChild(this.cnv, document.body.childNodes[0]);
                 ball.initializeObjectDatas();
                 simulationRenderer();
+            }
+            stop() {
+                cancelAnimationFrame(simulationRenderer);
             }
         }
 
@@ -27,6 +31,8 @@
                 this.vx = vx;
                 this.vy = vy;
                 this.color = color;
+                this.bounce = 0.8;
+                this.g = 0.5;
             }
 
             initializeObjectDatas() {
@@ -36,15 +42,29 @@
 
             drawSelf() {
                 simArea.ctx.clearRect(0, 0, simArea.cnv.width, simArea.cnv.height);
-                this.move();
+                this.collide();
+                this.moveSelf();
                 simArea.ctx.beginPath();
                 simArea.ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
                 simArea.ctx.fill();
                 simArea.ctx.stroke();
             }
-            move() {
-                this.x += 5;
-                this.y += 5;
+            moveSelf() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += this.g;
+            }
+            collide() {
+                if ((this.y >= simArea.cnv.height - this.r) || (this.y <= this.r)) {
+                    this.vy *= -(this.bounce);
+                }
+                if ((this.x >= simArea.cnv.width - this.r) || (this.x <= this.r)) {
+                    this.vx *= -(this.bounce);
+                }
+                if ((this.y == simArea.cnv.height - this.r) && (this.vy == 0)) {
+                    this.vx = 0;
+                    this.vy = 0;
+                }
             }
         }
 
@@ -54,8 +74,13 @@
         }
 
         const simArea = new simulationArea();
-        var ball = new object(100, 100, 25, 10, 10, "red");
+        var ball = new object(100, 100, 25, 5, 5, "red");
         window.onload = simArea.start();
     </script>
+    <style>
+        body {
+            background-color: black;
+        }
+    </style>
 </body>
 </html>
