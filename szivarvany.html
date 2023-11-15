@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Szivárvány</title>
+</head>
+<body>
+    <table cellspacing="0">
+        <tr id="sziv">
+            <td></td>
+        </tr>
+    </table>
+    <br>
+    <button onclick="szivarvany()">Nyomj meg!</button>
+    <script>
+        function szivarvany() {
+            const red = [0, -1, 0, 0, 1, 0];
+            const green = [1, 0, 0, -1, 0, 0];
+            const blue = [0, 0, 1, 0, 0, -1];
+            let currentTr = '';
+            for (let i = 0; i < 6; i++) {
+                for (let j = 0; j < 255; j += 5) {
+                    currentTr += `<td style="background-color: rgb(255, 255, ${i});"></td>`;
+                }
+                
+            }
+            document.getElementById('sziv').innerHTML = currentTr;
+        }
+    </script>
+    <style>
+        #sziv td {
+            width: 10px;
+            height: 20px;
+        }
+    </style>
+</body>
+</html>
