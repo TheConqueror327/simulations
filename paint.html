@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body style="background-color: black;">
+    <script>
+        class area {
+            cnv = document.createElement('canvas');
+            start() {
+                document.body.appendChild(this.cnv, document.body.childNodes[0]);
+                this.cnv.height = 800;
+                this.cnv.width = 1200;
+                this.cnv.style.border = '2px solid white';
+                this.ctx = this.cnv.getContext("2d");
+                detectMouseClickCoordinates();
+            }
+        }
+
+        const hexAlphabets = '0123456789ABCDEF';
+
+        function getRandomHexColor() {
+            let out = '#';
+            for (let i = 0; i < 6; i++) {
+                out += hexAlphabets[Math.floor(Math.random() * 16)];
+            }
+            return out
+        }
+
+        function detectMouseClickCoordinates() {
+            var mX, mY;
+            paintingArea.cnv.onclick = (e) => {
+                mX = e.x;
+                mY = e.y;
+                paintingArea.ctx.fillStyle = getRandomHexColor();
+                paintingArea.ctx.beginPath();
+                paintingArea.ctx.arc(mX,  mY, 100, 0, 2 * Math.PI);
+                paintingArea.ctx.fill();
+            }
+        }
+        
+        const paintingArea = new area();
+        window.onload = paintingArea.start();
+    </script>
+</body>
+</html>
