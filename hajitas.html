@@ -6,6 +6,11 @@
     <title>Ball throwing simulation</title>
 </head>
 <body>
+    <p id="vx"></p>
+    <p id="vy"></p>
+    <button onclick="simArea.stop()">stop</button>
+    <br>
+    <br>
     <script>
         class simulationArea {
             cnv = document.createElement('canvas');
@@ -19,7 +24,7 @@
                 simulationRenderer();
             }
             stop() {
-                cancelAnimationFrame(simulationRenderer);
+                cancelAnimationFrame(renderer);
             }
         }
 
@@ -31,7 +36,7 @@
                 this.vx = vx;
                 this.vy = vy;
                 this.color = color;
-                this.bounce = 0.8;
+                this.bounce = 0.5;
                 this.g = 0.5;
             }
 
@@ -56,21 +61,25 @@
             }
             collide() {
                 if ((this.y >= simArea.cnv.height - this.r) || (this.y <= this.r)) {
-                    this.vy *= -(this.bounce);
+                    this.vy = Math.round(-(this.bounce) * this.vy);
+                    this.y = simArea.cnv.height - this.r;
                 }
                 if ((this.x >= simArea.cnv.width - this.r) || (this.x <= this.r)) {
-                    this.vx *= -(this.bounce);
+                    this.vx = Math.round(-(this.bounce) * this.vx);
                 }
-                if ((this.y == simArea.cnv.height - this.r) && (this.vy == 0)) {
-                    this.vx = 0;
-                    this.vy = 0;
+                if ((this.y == simArea.cnv.height - this.r) && (Math.round(this.vy) == 0)) {
+                    simArea.stop();
                 }
             }
         }
 
+        let renderer;
+
         function simulationRenderer() {
-            requestAnimationFrame(simulationRenderer);
+            renderer = requestAnimationFrame(simulationRenderer);
             ball.drawSelf();
+            document.getElementById('vx').innerHTML = ball.vx;
+            document.getElementById('vy').innerHTML = ball.vy;
         }
 
         const simArea = new simulationArea();
@@ -80,6 +89,9 @@
     <style>
         body {
             background-color: black;
+        }
+        p {
+            color: white;
         }
     </style>
 </body>
