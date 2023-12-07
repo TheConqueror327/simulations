@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        class gameArea {
+            cnv = document.createElement('canvas');
+            generateMap() {
+                this.cnv.height = 600;
+                this.cnv.width = 800;
+                this.ctx = this.cnv.getContext('2d');
+                this.ctx.fillStyle = 'black';
+                document.body.appendChild(this.cnv, document.body.childNodes[0]);
+            }
+            clear() {
+                this.ctx.clearRect(0, 0, this.cnv.width, this.cnv.height);
+            }
+        }
+
+        class object {
+            constructor (x, y, color, vx, vy) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.vx = vx;
+                this.vy = vy;
+                game.ctx.fillStyle = color;
+                game.ctx.strokeStyle = color;
+            }
+            drawSelf() {
+                this.paint();
+                this.moveSelf();
+                this.collide();
+            }
+            moveSelf() {
+                this.x += this.vx;
+                this.y += this.vy;
+            }
+            paint() {
+                throw new Error('Abstract function');
+            };
+            collide() {
+                throw new Error('Abstract function');
+            }
+        }
+
+        class rect extends object {
+            constructor (x, y, width, height, color, vx, vy) {
+                super(x, y, color, vx, vy);
+                this.width = width;
+                this.height = height;
+            }
+            paint() {
+                this.ctx.fillRect(this.x, this.y, this.width, this.height);
+            }
+            collide() {
+                if ((this.y > game.cnv.height - this.height) || (this.y < 0)) {
+                    this.vy *= -1;
+                }
+                if ((this.x > game.cnv.width - this.width) || (this.x < 0)) {
+                    this.vx *= -1;
+                }
+            }
+        }
+
+        class filledCircle extends object {
+            constructor (x, y, r, color, vx, vy) {
+                super(x, y, color, vx, vy);
+                this.r = r;
+            }
+            paint() {
+                game.ctx.beginPath();
+                game.ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
+                game.ctx.fill();
+            }
+            collide() {
+                if ((this.x < this.r) || (this.x > game.cnv.width - this.r)) {
+                    this.vx *= -1;
+                }
+                if ((this.y < this.r) || (this.y > game.cnv.height - this.r)) {
+                    this.vy *= -1;
+                }
+            }
+        }
+
+        class circle extends filledCircle {
+            paint() {
+                game.ctx.beginPath();
+                game.ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
+                game.ctx.stroke();
+            }
+        }
+
+        var game = new gameArea();
+        game.generateMap();
+        let startTime = new Date();
+        var lis = [];
+        var n = 20;
+        var deltaRad = 2 * Math.PI / n;
+        var mainCircle = new circle(game.cnv.width / 2, game.cnv.height / 2, game.cnv.width / 4, 'white', 0, 0);
+        for (let i = 0; i < n; i++) {
+            lis.push(new filledCircle(game.cnv.width / 2 + mainCircle.r * Math.cos(i * deltaRad), game.cnv.height / 2 + mainCircle.r * Math.sin(i * deltaRad), 5,'white', 0, 0));
+        }
+        let rAF;
+
+        function render() {
+            rAF = requestAnimationFrame(render);
+            game.clear();
+            for (let o = 0; o < lis.length; o++) {
+                lis[o].drawSelf();
+            }
+            mainCircle.drawSelf();
+        }
+
+
+        render();
+    </script>
+    <style>
+        body {
+            background-color: black;
+        }
+        canvas {
+            background-color: black;
+            border: 2px solid white;
+        }
+    </style>
+</body>
+</html>
