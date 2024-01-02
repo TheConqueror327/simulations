@@ -31,6 +31,8 @@ l2 = 80
 base_coordinates = [0, 0]
 end_coordinates = [200, 60]
 
+is_dragging = False
+
 def draw_arm(arm_1_length: int, angles: list, P: list):
     midpoint_coordinates = [arm_1_length * math.cos(angles[0]), arm_1_length * math.sin(angles[0])]
     pygame.draw.line(screen, 'white', to_screen(base_coordinates), to_screen(midpoint_coordinates))
@@ -41,8 +43,11 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
-            end_coordinates = from_screen(list(pygame.mouse.get_pos()))
-
+            is_dragging = True
+        if event.type == pygame.MOUSEBUTTONUP:
+            is_dragging = False
+    if is_dragging:
+        end_coordinates = from_screen(list(pygame.mouse.get_pos()))
     screen.fill("purple")
     pygame.draw.circle(screen, 'red', to_screen(base_coordinates), l1 + l2)
     pygame.draw.circle(screen, 'purple', to_screen(base_coordinates), abs(l1 - l2))
