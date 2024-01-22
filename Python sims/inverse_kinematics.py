@@ -51,9 +51,10 @@ while running:
     screen.fill("purple")
     pygame.draw.circle(screen, 'red', to_screen(base_coordinates), l1 + l2)
     pygame.draw.circle(screen, 'purple', to_screen(base_coordinates), abs(l1 - l2))
-    draw_arm(l1, IK_2DoF(l1, l2, end_coordinates), end_coordinates)
+    if l1-l2<=((end_coordinates[0]**2)+(end_coordinates[1]**2))**0.5<=l1+l2:
+        draw_arm(l1, IK_2DoF(l1, l2, end_coordinates), end_coordinates)
+        pygame.draw.circle(screen, 'white', to_screen(end_coordinates), 5)
     pygame.draw.circle(screen, 'white', to_screen(base_coordinates), 5)
-    pygame.draw.circle(screen, 'white', to_screen(end_coordinates), 5)
     pygame.display.flip()
     clock.tick(60)
 
