@@ -37,6 +37,7 @@ def draw_arm(arm_1_length: int, angles: list, P: list):
     midpoint_coordinates = [arm_1_length * math.cos(angles[0]), arm_1_length * math.sin(angles[0])]
     pygame.draw.line(screen, 'white', to_screen(base_coordinates), to_screen(midpoint_coordinates))
     pygame.draw.line(screen, 'white', to_screen(midpoint_coordinates), to_screen(P))
+    pygame.draw.circle(screen, 'white', to_screen(midpoint_coordinates), 5)
 
 while running:
     for event in pygame.event.get():
@@ -51,9 +52,10 @@ while running:
     screen.fill("purple")
     pygame.draw.circle(screen, 'red', to_screen(base_coordinates), l1 + l2)
     pygame.draw.circle(screen, 'purple', to_screen(base_coordinates), abs(l1 - l2))
-    if l1-l2<=((end_coordinates[0]**2)+(end_coordinates[1]**2))**0.5<=l1+l2:
+    if l1-l2<=((end_coordinates[0]**2) + (end_coordinates[1]**2))**0.5<=l1+l2:
         draw_arm(l1, IK_2DoF(l1, l2, end_coordinates), end_coordinates)
         pygame.draw.circle(screen, 'white', to_screen(end_coordinates), 5)
+
     pygame.draw.circle(screen, 'white', to_screen(base_coordinates), 5)
     pygame.display.flip()
     clock.tick(60)
